@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deku - Cool Shit. Engineered.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #000;
+            color: #EAEAEA;
+        }
+        .font-anton {
+            font-family: 'Anton', sans-serif;
+            letter-spacing: 0.05em;
+        }
+        .brand-logo {
+            filter: invert(1);
+        }
+        /* A little something to make the accent color pop */
+        .neon-accent {
+            color: #00FF94;
+        }
+        .neon-border {
+            border-color: #00FF94;
+        }
+        .neon-bg {
+            background-color: #00FF94;
+            color: #111111;
+        }
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="py-6 px-4 md:px-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <img src="logo.png" alt="Deku Logo" class="w-64">
+            <nav class="text-2xl">
+                <a href="#products" class="mx-2 md:mx-4 hover:text-white transition-colors duration-300">PRODUCTS</a>
+                <a href="#manifesto" class="mx-2 md:mx-4 hover:text-white transition-colors duration-300">MANIFESTO</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 md:px-8">
+
+        <section class="min-h-[60vh] flex items-center">
+            <div>
+                <h1 class="font-anton text-6xl md:text-8xl lg:text-9xl uppercase leading-none">
+                    WE DON'T MAKE<br>TOYS<span class="neon-accent">.</span>
+                </h1>
+                <p class="mt-4 text-lg md:text-xl max-w-2xl text-white">
+                    We build meticulously engineered tools for people who appreciate the difference.
+                </p>
+            </div>
+        </section>
+
+        <section id="products" class="py-20">
+            <div class="flex items-center mb-12">
+                <h2 class="font-anton text-4xl md:text-5xl uppercase">The Arsenal</h2>
+                <div class="flex-grow border-t-2 border-dashed neon-border ml-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                
+                <div class="border border-white p-6 product-card group transition-all duration-300 hover:border-gray-500">
+                    <div class="overflow-hidden mb-6">
+                        <img src="https://shop.absurd.industries/cdn/shop/files/IMG_4385.jpg?v=1726940573&width=1346" alt="CoryDora" class="w-full h-auto object-cover product-image transition-transform duration-500 ease-in-out">
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="text-2xl font-bold">CoryDora</h3>
+                        <p class="text-xl neon-accent font-bold">₹4949</p>
+                    </div>
+                    <p class="white mt-2 mb-4">A macro keyboard that doesn't suck. Built for efficiency, not for show. If you know, you know.</p>
+                    <a href="https://shop.absurd.industries/products/cory-dora" target="_blank" class="inline-block mt-4 font-bold text-black bg-white px-6 py-2 uppercase hover:neon-bg transition-all duration-300">Examine Specs</a>
+                </div>
+
+                <div class="border border-border p-6 product-card group transition-all duration-300">
+                    <div class="overflow-hidden mb-6">
+                        <img src="https://shop.absurd.industries/cdn/shop/files/cory-dora-kit-deku-shopabsurdindustries-958996.jpg?v=1727044690&width=1346" alt="CoryDora Kit" class="w-full h-auto object-cover product-image transition-transform duration-500 ease-in-out">
+                    </div>
+                    <div class="flex justify-between items-baseline">
+                        <h3 class="text-2xl font-bold">CoryDora Kit</h3>
+                        <p class="text-xl neon-accent font-bold">₹3636</p>
+                    </div>
+                    <p class="white mt-2 mb-4">You think you can build it better? Prove it. The same parts, none of the hand-holding.</p>
+                    <a href="https://shop.absurd.industries/products/cory-dora-kit" target="_blank" class="inline-block mt-4 font-bold text-black bg-white px-6 py-2 uppercase hover:neon-bg transition-all duration-300">Accept Challenge</a>
+                </div>
+
+                <div class="border-2 border-dashed border-gray-700 p-6 flex flex-col justify-center items-center text-center">
+                     <h3 class="text-2xl font-bold white">Nontendo</h3>
+                     <p class="white mt-2 mb-4">Currently in the lab. It's not ready for you. You're probably not ready for it.</p>
+                     <p class="text-xl text-gray-700 font-bold">₹2222</p>
+                     <button class="mt-4 font-bold white bg-gray-800 px-6 py-2 uppercase cursor-not-allowed">CLASSIFIED</button>
+                </div>
+
+                <div class="border-2 border-dashed border-gray-700 p-6 flex flex-col justify-center items-center text-center">
+                     <h3 class="text-2xl font-bold white">Hourglass</h3>
+                     <p class="white mt-2 mb-4">A Pomodoro timer for people who value their time. Because it's running out. Coming soon.</p>
+                     <p class="text-xl text-gray-700 font-bold">₹4444</p>
+                     <button class="mt-4 font-bold white bg-gray-800 px-6 py-2 uppercase cursor-not-allowed">PATIENCE</button>
+                </div>
+
+            </div>
+        </section>
+
+
+        <section id="manifesto" class="py-20">
+             <div class="flex items-center mb-12">
+                <div class="flex-grow border-t-2 border-dashed neon-border mr-6"></div>
+                <h2 class="font-anton text-4xl md:text-5xl uppercase text-right">Our Manifesto</h2>
+            </div>
+            
+            <div class="max-w-4xl ml-auto text-right text-lg md:text-xl space-y-6 text-gray-300">
+                <p>
+                    Balu has been making and breaking things since he was nine. Not for fun. For science. He's been walking the lanes of SP Road since he was eleven, not to shop, but to hunt. Hunting for the perfect capacitor, the most reliable resistor, the switch with the most satisfying click.
+                </p>
+                <p>
+                    At twenty-eight, that obsession hasn't faded. It's been refined. Forged. Turned into <span class="neon-accent">Deku</span>.
+                </p>
+                <p>
+                    This is not a hobby. It's a compulsion to build things that work, and work flawlessly. We don't chase trends. We don't cut corners. We build cool shit, period. The kind of shit you'll still be using years from now.
+                </p>
+                <p>
+                    And Nami, the two-year-old Golden Retriever? She's the CEO of Quality Control. If it doesn't survive her tail wags, it doesn't ship.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-20 border-t border-gray-800">
+        <div class="container mx-auto py-6 px-4 md:px-8 text-center white">
+           <p>&copy; 2025 Nami Technologies Private Limited. Built with purpose in Bengaluru.</p>
+           <p>Don't just buy it. Understand it.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
