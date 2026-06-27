@@ -209,6 +209,32 @@
     .price-hero .total { text-align: right; color: var(--ink-faint); font-size: .86rem; font-weight: 600; }
     .min-note { color: var(--stamp-dark); font-size: .72rem; font-weight: 600; }
     .price-foot { margin: 12px 0 0; color: var(--muted); font-size: .76rem; line-height: 1.5; text-align: center; }
+
+    /* ---- Editable summary + inline edit sheet ---- */
+    .edit-ico { display: none; color: var(--muted); font-size: .9rem; opacity: .55; }
+    .spec-hero.editable .edit-ico, .tile.editable .edit-ico { margin-left: auto; }
+    .edit-sheet { position: fixed; inset: 0; z-index: 65; background: rgba(26, 19, 8, .5); display: none; align-items: flex-end; }
+    .edit-sheet.open { display: flex; }
+    .edit-panel { width: 100%; max-height: 82vh; overflow-y: auto; background: var(--paper); border-radius: 18px 18px 0 0; padding: 16px 16px 22px; box-shadow: 0 -10px 30px rgba(40, 28, 10, .25); animation: sheetUp .25s cubic-bezier(.2, .9, .3, 1); }
+    @keyframes sheetUp { from { transform: translateY(24px); opacity: .5; } to { transform: none; opacity: 1; } }
+    .edit-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .edit-head span { font-family: "Fraunces", Georgia, serif; font-weight: 800; font-size: 1.1rem; }
+    .edit-head button { background: none; border: none; font-size: 1.4rem; color: var(--muted); cursor: pointer; width: 38px; height: 38px; border-radius: 9px; }
+    .edit-head button:hover { background: rgba(0, 0, 0, .06); color: var(--ink); }
+    @media (min-width: 761px) { .edit-sheet { align-items: center; justify-content: center; padding: 18px; } .edit-panel { max-width: 520px; border-radius: 14px; animation: none; } }
+
+    /* ---- Info / about ---- */
+    .info-p { margin: 0 0 14px; color: var(--ink-light); font-size: .9rem; line-height: 1.55; }
+    .info-sec { margin-bottom: 14px; }
+    .info-sec h4 { margin: 0 0 4px; font-size: .92rem; display: flex; align-items: center; gap: 7px; }
+    .info-sec h4 i { color: var(--stamp-dark); }
+    .info-sec p { margin: 0; color: var(--ink-light); font-size: .85rem; line-height: 1.5; }
+    .info-sec a { color: var(--stamp-dark); font-weight: 700; }
+
+    /* ---- Phone tools (?, Build) ---- */
+    .phone-tools { display: none; }
+    .phone-tool { display: none; }
+
     .price-block.calculating .price-hero .big { background: linear-gradient(90deg, rgba(255, 89, 0, .35) 25%, var(--stamp) 50%, rgba(255, 89, 0, .35) 75%); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shimmer .9s linear infinite; }
     @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 
@@ -273,9 +299,13 @@
       .build-done { display: flex; width: calc(100% - 28px); margin: 0 14px 18px; }
       .continue[data-next="0"] { display: none; } /* avoid the duplicate phone button */
 
-      .mobile-build-btn { display: inline-flex; position: fixed; top: 10px; right: 12px; z-index: 25; align-items: center; gap: 7px; background: var(--ink); color: var(--paper); border: none; border-radius: 999px; padding: 10px 16px; font-weight: 700; font-size: .82rem; box-shadow: var(--shadow); cursor: pointer; }
+      .phone-tools { display: flex; position: fixed; top: 10px; right: 12px; z-index: 25; gap: 8px; align-items: center; }
+      body.build-open .phone-tools { display: none; }
+      .mobile-build-btn { display: inline-flex; align-items: center; gap: 7px; background: var(--ink); color: var(--paper); border: none; border-radius: 999px; padding: 10px 16px; font-weight: 700; font-size: .82rem; box-shadow: var(--shadow); cursor: pointer; }
       .mobile-build-btn i { font-size: 1.15rem; }
-      body.build-open .mobile-build-btn { display: none; }
+      .phone-tool { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--ink); color: var(--paper); border: none; font-size: 1.2rem; box-shadow: var(--shadow); cursor: pointer; }
+      .editable { cursor: pointer; }
+      .edit-ico { display: inline-block; }
 
       .lead-grid { grid-template-columns: 1fr; }
       .lead-card { flex-direction: row; align-items: center; gap: 11px; }
@@ -308,7 +338,10 @@
         </svg>
         <span class="brand-word">Silly<span class="cuts">Cuts</span></span>
       </a>
-      <button class="btn btn-ghost" id="rateBtn" type="button"><i class="ph-bold ph-table"></i> Rate card</button>
+      <span style="display:inline-flex;gap:8px">
+        <button class="btn btn-ghost" id="infoBtnDesktop" type="button"><i class="ph-bold ph-question"></i> About</button>
+        <button class="btn btn-ghost" id="rateBtn" type="button"><i class="ph-bold ph-table"></i> Rate card</button>
+      </span>
     </nav>
   </header>
 
@@ -417,19 +450,20 @@
           <div class="card-bg alt" aria-hidden="true"></div>
           <div class="card-in">
             <h2 class="sum-title"><i class="ph-bold ph-receipt"></i> Your order</h2>
-            <div class="spec-hero">
+            <div class="spec-hero editable" data-edit="material">
               <div class="swatch clear" id="specSwatch"></div>
               <div>
                 <h3 id="specMaterial">—</h3>
                 <div class="thk" id="specThk">—</div>
               </div>
+              <i class="ph-bold ph-pencil-simple edit-ico"></i>
             </div>
             <div class="spec-tiles">
-              <div class="tile"><i class="ph-fill ph-ruler"></i><div class="tl"><div class="k">Size (W×L)</div><div class="v" id="cSize">—</div></div></div>
+              <div class="tile editable" data-edit="size"><i class="ph-fill ph-ruler"></i><div class="tl"><div class="k">Size (W×L)</div><div class="v" id="cSize">—</div></div><i class="ph-bold ph-pencil-simple edit-ico"></i></div>
               <div class="tile"><i class="ph-fill ph-scissors"></i><div class="tl"><div class="k">Cut length</div><div class="v" id="cCut">—</div></div></div>
-              <div class="tile"><i class="ph-fill ph-stack"></i><div class="tl"><div class="k">Quantity</div><div class="v" id="cQty">—</div></div></div>
-              <div class="tile"><i class="ph-fill ph-clock"></i><div class="tl"><div class="k">Lead time</div><div class="v" id="cLead">—</div></div></div>
-              <div class="tile"><i class="ph-fill ph-file-dashed"></i><div class="tl"><div class="k">Design</div><div class="v" id="cDesign">—</div></div></div>
+              <div class="tile editable" data-edit="quantity"><i class="ph-fill ph-stack"></i><div class="tl"><div class="k">Quantity</div><div class="v" id="cQty">—</div></div><i class="ph-bold ph-pencil-simple edit-ico"></i></div>
+              <div class="tile editable" data-edit="lead"><i class="ph-fill ph-clock"></i><div class="tl"><div class="k">Lead time</div><div class="v" id="cLead">—</div></div><i class="ph-bold ph-pencil-simple edit-ico"></i></div>
+              <div class="tile editable" data-edit="design"><i class="ph-fill ph-file-dashed"></i><div class="tl"><div class="k">Design</div><div class="v" id="cDesign">—</div></div><i class="ph-bold ph-pencil-simple edit-ico"></i></div>
             </div>
             <div class="price-block" id="priceBlock" aria-live="polite">
               <div class="sum-row"><span>Material <span class="sub">(<span id="sArea">—</span> sq ft)</span></span><b id="sMaterial">—</b></div>
@@ -450,7 +484,37 @@
     <p class="footnote">Files stay on your device — the DXF is attached by you in the chat.</p>
   </main>
 
-  <button class="mobile-build-btn" id="buildOpen" type="button"><i class="ph-bold ph-sliders-horizontal"></i> Build</button>
+  <div class="phone-tools">
+    <button class="phone-tool" id="infoOpen" type="button" aria-label="About SillyCuts"><i class="ph-bold ph-question"></i></button>
+    <button class="mobile-build-btn" id="buildOpen" type="button"><i class="ph-bold ph-sliders-horizontal"></i> Build</button>
+  </div>
+
+  <!-- Inline edit sheet -->
+  <div class="edit-sheet" id="editSheet" role="dialog" aria-modal="true" aria-labelledby="editTitle">
+    <div class="edit-panel">
+      <div class="edit-head"><span id="editTitle">Edit</span><button id="editClose" type="button" aria-label="Close"><i class="ph-bold ph-x"></i></button></div>
+      <div class="edit-body" id="editBody"></div>
+      <button class="btn btn-stamp" id="editDone" type="button" style="width:100%;margin-top:14px">Done</button>
+    </div>
+  </div>
+
+  <!-- About / info modal -->
+  <div class="modal-overlay" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+    <div class="modal">
+      <div class="modal-head">
+        <h2 id="infoTitle">About SillyCuts</h2>
+        <button class="modal-close" id="infoClose" type="button" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body">
+        <p class="info-p">SillyCuts is your friendly neighborhood laser-cutting service. Send a vector file, get an instant rupee quote, and we cut it clean.</p>
+        <div class="info-sec"><h4><i class="ph-bold ph-stack"></i> What we cut</h4><p>Acrylic (clear &amp; black), birch plywood, MDF, cardboard, leather, and anodized tags — 1 to 12&nbsp;mm thick.</p></div>
+        <div class="info-sec"><h4><i class="ph-bold ph-path"></i> How it works</h4><p>Drop a DXF, see it in 3D on the bed, pick quantity &amp; turnaround, then confirm — your quote (with a summary card) lands on our WhatsApp.</p></div>
+        <div class="info-sec"><h4><i class="ph-bold ph-clock"></i> Turnaround</h4><p>From ~24 hours to 3 days, depending on how soon you need it. Every file is reviewed by hand before cutting.</p></div>
+        <div class="info-sec"><h4><i class="ph-bold ph-whatsapp-logo"></i> Contact</h4><p>Balu · <a id="infoWa" href="#" target="_blank" rel="noopener">+91&nbsp;77605&nbsp;79605</a></p></div>
+      </div>
+      <div class="modal-foot"><button class="btn btn-stamp" id="infoOk" type="button">Got it</button></div>
+    </div>
+  </div>
 
   <!-- Rate card modal -->
   <div class="modal-overlay" id="rateModal" role="dialog" aria-modal="true" aria-labelledby="rateTitle">
@@ -608,6 +672,7 @@
       priceBlock: $("priceBlock"), sArea: $("sArea"), sMaterial: $("sMaterial"), sMins: $("sMins"), sCutting: $("sCutting"), sSetup: $("sSetup"),
       perPiece: $("perPiece"), totalLine: $("totalLine"), minNote: $("minNote"), request: $("request"),
       rateModal: $("rateModal"), rateBody: $("rateBody"), copied: $("copied"),
+      editSheet: $("editSheet"), editTitle: $("editTitle"), editBody: $("editBody"),
     };
     const swatchCss = { clear: "linear-gradient(135deg,#fdfbf6,#e6dcc7)", black: "#16191f", wood: "linear-gradient(135deg,#e3c188,#c08f4f)", mdf: "linear-gradient(135deg,#c2956a,#a87a4f)", kraft: "linear-gradient(135deg,#cda06a,#b07f49)", leather: "linear-gradient(135deg,#9a5a37,#5e351f)", alum: "linear-gradient(135deg,#aeb4bc,#f0f2f4)" };
     const isPhone = () => window.matchMedia("(max-width:760px)").matches;
@@ -615,9 +680,9 @@
     function unit() { return Number(els.dxfUnit.value) || 1; }
     function nativeWH() { return state.dxf ? [state.dxf.rawW * unit(), state.dxf.rawH * unit()] : [0, 0]; }
 
-    /* ----- build pickers ----- */
-    function buildMaterials() {
-      els.materialGrid.innerHTML = "";
+    /* ----- build pickers (render into any container so the edit-sheet can reuse them) ----- */
+    function buildMaterialGridInto(grid) {
+      grid.innerHTML = "";
       for (const [key, m] of Object.entries(CONFIG.materials)) {
         const card = document.createElement("div");
         card.className = "choice"; card.dataset.key = key;
@@ -627,27 +692,27 @@
           `<div class="thk-row"><span class="thk-label">Thickness</span>${chips}</div>`;
         card.querySelector(".choice-top").addEventListener("click", () => selectMaterial(key));
         card.querySelectorAll(".thk-chip").forEach((c) => c.addEventListener("click", () => selectMaterialThk(key, Number(c.dataset.t))));
-        els.materialGrid.appendChild(card);
+        grid.appendChild(card);
       }
     }
-    function buildQty() {
-      els.qtyGrid.innerHTML = "";
+    function buildQtyInto(grid) {
+      grid.innerHTML = "";
       CONFIG.qtyPresets.forEach((n) => {
         const b = document.createElement("button");
         b.type = "button"; b.className = "qty-chip"; b.dataset.q = n; b.textContent = n;
         b.addEventListener("click", () => { state.qty = n; els.quantity.value = n; syncQty(); withCalc(refresh); });
-        els.qtyGrid.appendChild(b);
+        grid.appendChild(b);
       });
     }
-    function buildLead() {
-      els.leadGrid.innerHTML = "";
+    function buildLeadInto(grid) {
+      grid.innerHTML = "";
       for (const [key, l] of Object.entries(CONFIG.lead)) {
         const disc = Math.round((1 - l.mult) * 100);
         const b = document.createElement("button");
         b.type = "button"; b.className = "lead-card"; b.dataset.lead = key;
         b.innerHTML = `<i class="ph-bold ${l.icon}"></i><span class="ll">${l.label}</span><span class="ls">${l.desc}</span><span class="lp">${disc > 0 ? "save " + disc + "%" : "fastest"}</span>`;
         b.addEventListener("click", () => { state.lead = key; syncLead(); withCalc(refresh); });
-        els.leadGrid.appendChild(b);
+        grid.appendChild(b);
       }
     }
     function selectMaterial(key) {
@@ -657,15 +722,46 @@
       syncSelections(); renderPreview(); withCalc(refresh);
     }
     function selectMaterialThk(key, t) { state.material = key; state.thickness = t; syncSelections(); renderPreview(); withCalc(refresh); }
+    // sync across every rendered grid (build panel + edit sheet) so state stays shared
     function syncSelections() {
-      els.materialGrid.querySelectorAll(".choice").forEach((c) => {
+      document.querySelectorAll(".material-grid").forEach((grid) => grid.querySelectorAll(".choice").forEach((c) => {
         const sel = c.dataset.key === state.material;
         c.classList.toggle("selected", sel);
         c.querySelectorAll(".thk-chip").forEach((chip) => chip.classList.toggle("selected", sel && Number(chip.dataset.t) === state.thickness));
-      });
+      }));
     }
-    function syncQty() { els.qtyGrid.querySelectorAll(".qty-chip").forEach((c) => c.classList.toggle("selected", Number(c.dataset.q) === state.qty)); }
-    function syncLead() { els.leadGrid.querySelectorAll(".lead-card").forEach((c) => c.classList.toggle("selected", c.dataset.lead === state.lead)); }
+    function syncQty() { document.querySelectorAll(".qty-chip").forEach((c) => c.classList.toggle("selected", Number(c.dataset.q) === state.qty)); }
+    function syncLead() { document.querySelectorAll(".lead-card").forEach((c) => c.classList.toggle("selected", c.dataset.lead === state.lead)); }
+
+    /* ----- inline edit sheet: tap a summary field, edit it, build stays in sync ----- */
+    function openEdit(field) {
+      if (field === "design") { els.fileInput.click(); return; }
+      els.editTitle.textContent = { material: "Material & thickness", size: "Size", quantity: "Quantity", lead: "How soon?" }[field] || "Edit";
+      const body = els.editBody; body.innerHTML = "";
+      if (field === "material") {
+        const grid = document.createElement("div"); grid.className = "material-grid"; body.appendChild(grid);
+        buildMaterialGridInto(grid); syncSelections();
+      } else if (field === "quantity") {
+        const grid = document.createElement("div"); grid.className = "qty-grid"; body.appendChild(grid); buildQtyInto(grid);
+        const f = document.createElement("div"); f.className = "field"; f.style.marginTop = "10px";
+        f.innerHTML = '<label>Or enter a number</label><input type="number" min="1" max="5000">';
+        const inp = f.querySelector("input"); inp.value = state.qty;
+        inp.addEventListener("input", () => { state.qty = Math.max(1, Number(inp.value) || 1); els.quantity.value = state.qty; syncQty(); refresh(); });
+        body.appendChild(f); syncQty();
+      } else if (field === "lead") {
+        const grid = document.createElement("div"); grid.className = "lead-grid"; body.appendChild(grid); buildLeadInto(grid); syncLead();
+      } else if (field === "size") {
+        const fg = document.createElement("div"); fg.className = "field-grid";
+        fg.innerHTML = '<div class="field"><label>Length (mm)</label><input id="sLen" type="number" min="1"></div><div class="field"><label>Width (mm)</label><input id="sWid" type="number" min="1"></div>';
+        body.appendChild(fg);
+        const sLen = fg.querySelector("#sLen"), sWid = fg.querySelector("#sWid");
+        sLen.value = Math.round(state.heightMm); sWid.value = Math.round(state.widthMm);
+        sWid.addEventListener("input", () => { const v = Math.max(0, Number(sWid.value) || 0); state.widthMm = v; els.width.value = Math.round(v); if (state.dxf) { const [nW, nH] = nativeWH(); state.heightMm = nH * (v / (nW || 1)); els.length.value = Math.round(state.heightMm); sLen.value = Math.round(state.heightMm); } update(); });
+        sLen.addEventListener("input", () => { const v = Math.max(0, Number(sLen.value) || 0); state.heightMm = v; els.length.value = Math.round(v); if (state.dxf) { const [nW, nH] = nativeWH(); state.widthMm = nW * (v / (nH || 1)); els.width.value = Math.round(state.widthMm); sWid.value = Math.round(state.widthMm); } update(); });
+      }
+      els.editSheet.classList.add("open");
+    }
+    function closeEdit() { els.editSheet.classList.remove("open"); }
 
     function geometryMM() {
       if (state.dxf) {
@@ -1139,7 +1235,24 @@
     $("rateClose").addEventListener("click", closeRate);
     $("rateOk").addEventListener("click", closeRate);
     els.rateModal.addEventListener("click", (e) => { if (e.target === els.rateModal) closeRate(); });
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeRate(); });
+
+    // inline edit from the summary card (phone)
+    document.querySelectorAll("[data-edit]").forEach((el) => el.addEventListener("click", () => { if (isPhone()) openEdit(el.dataset.edit); }));
+    $("editClose").addEventListener("click", closeEdit);
+    $("editDone").addEventListener("click", closeEdit);
+    els.editSheet.addEventListener("click", (e) => { if (e.target === els.editSheet) closeEdit(); });
+
+    // about / info
+    const openInfo = () => $("infoModal").classList.add("open");
+    const closeInfo = () => $("infoModal").classList.remove("open");
+    $("infoOpen").addEventListener("click", openInfo);
+    $("infoBtnDesktop").addEventListener("click", openInfo);
+    $("infoClose").addEventListener("click", closeInfo);
+    $("infoOk").addEventListener("click", closeInfo);
+    $("infoModal").addEventListener("click", (e) => { if (e.target === $("infoModal")) closeInfo(); });
+    $("infoWa").href = "https://wa.me/" + CONFIG.whatsapp;
+
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeRate(); closeInfo(); closeEdit(); } });
     $("copyRate").addEventListener("click", () => {
       const done = () => { els.copied.hidden = false; setTimeout(() => (els.copied.hidden = true), 2000); };
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(rateCardText()).then(done, done); else done();
@@ -1147,7 +1260,7 @@
     window.addEventListener("resize", () => { if (TV) TV.resize(); });
 
     /* ====================== Init ====================== */
-    buildMaterials(); buildQty(); buildLead();
+    buildMaterialGridInto(els.materialGrid); buildQtyInto(els.qtyGrid); buildLeadInto(els.leadGrid);
     syncSelections(); syncQty(); syncLead(); update();
     if (isPhone()) document.body.classList.add("build-open");
     initThree().then(() => renderPreview()).catch(() => {
